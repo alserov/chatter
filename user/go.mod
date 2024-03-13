@@ -1,4 +1,4 @@
-module github.com/MaksKazantsev/chatter
+module github.com/MaksKazantsev/chatter/user
 
 go 1.22.1
 
@@ -16,7 +16,7 @@ require (
 	go.mongodb.org/mongo-driver v1.14.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
-	golang.org/x/crypto v0.17.0 // indirect
+	golang.org/x/crypto v0.21.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

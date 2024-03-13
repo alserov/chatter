@@ -1,0 +1,5 @@
+env: local
+port: 9991
+db:
+  host: localhost
+  port: 9992
