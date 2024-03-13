@@ -1,7 +1,0 @@
-services:
-  db:
-    container_name: user_container
-    image: mongo:latest
-    restart: always
-    ports:
-      - "9992:27017"
