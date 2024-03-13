@@ -18,10 +18,16 @@ func MustStart() {
 		fx.Provide(
 			config.MustLoad,
 			log.MustSetup,
-			scylla.NewRepository,
 			usecase.NewChat,
-			server.NewServer,
 		),
+
+		fx.Invoke(func(cfg *config.Config) {
+			fx.Provide(scylla.NewRepository(scylla.MustConnect(cfg.DB.Addr)))
+		}),
+
+		fx.Invoke(func(ucase usecase.Chat) {
+			fx.Provide(server.NewServer(ucase))
+		}),
 
 		fx.Invoke(func(lc fx.Lifecycle, cfg *config.Config, log log.Logger, srvr server.Server) {
 			lc.Append(fx.Hook{
