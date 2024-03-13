@@ -19,3 +19,7 @@ func (c Converter) ToMessage(in *messages.Message) models.Message {
 func (c Converter) ToEditMessage(in *messages.Edit) models.EditMessage {
 	return models.EditMessage{}
 }
+
+func (c Converter) ToDeleteMessage(in *messages.Delete) models.DeleteMessage {
+	return models.DeleteMessage{}
+}

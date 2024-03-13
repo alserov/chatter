@@ -17,10 +17,11 @@ type Server interface {
 	messages.MessagesServer
 }
 
-func NewServer() Server {
+func NewServer(ucase usecase.Chat) Server {
 	grpcServer := grpc.NewServer()
 	server := &server{
 		srvr: grpcServer,
+		uc:   ucase,
 	}
 
 	messages.RegisterMessagesServer(grpcServer, server)
@@ -59,12 +60,12 @@ func (s server) CreateMessage(ctx context.Context, message *messages.Message) (*
 	return &emptypb.Empty{}, nil
 }
 
-func (s server) DeleteMessage(ctx context.Context, message *messages.Delete) (*emptypb.Empty, error) {
-	if err := s.validate.ValidateDeleteMessage(message); err != nil {
+func (s server) DeleteMessage(ctx context.Context, delete *messages.Delete) (*emptypb.Empty, error) {
+	if err := s.validate.ValidateDeleteMessage(delete); err != nil {
 		return nil, err
 	}
 
-	err := s.uc.DeleteMessage(ctx, message.Id, message.ChatId)
+	err := s.uc.DeleteMessage(ctx, s.convert.ToDeleteMessage(delete))
 	if err != nil {
 		return &emptypb.Empty{}, err
 	}
@@ -72,12 +73,12 @@ func (s server) DeleteMessage(ctx context.Context, message *messages.Delete) (*e
 	return &emptypb.Empty{}, nil
 }
 
-func (s server) EditMessage(ctx context.Context, message *messages.Edit) (*emptypb.Empty, error) {
-	if err := s.validate.ValidateEditMessage(message); err != nil {
+func (s server) EditMessage(ctx context.Context, edit *messages.Edit) (*emptypb.Empty, error) {
+	if err := s.validate.ValidateEditMessage(edit); err != nil {
 		return nil, err
 	}
 
-	err := s.uc.EditMessage(ctx, s.convert.ToEditMessage(message))
+	err := s.uc.EditMessage(ctx, s.convert.ToEditMessage(edit))
 	if err != nil {
 		return &emptypb.Empty{}, err
 	}
