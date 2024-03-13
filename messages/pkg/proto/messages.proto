@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+option go_package = "github.com/alserov/chatter/messages/pkg/proto/gen;messages";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+service Messages {
+  rpc CreateMessage(Message) returns(google.protobuf.Empty);
+  rpc DeleteMessage(Delete) returns (google.protobuf.Empty);
+  rpc EditMessage(Edit) returns (google.protobuf.Empty);
+}
+
+message Message {
+  string id = 1;
+  string chat_id = 2;
+  string sender_id = 3;
+  bytes value = 4;
+  google.protobuf.Timestamp sent_at = 5;
+  google.protobuf.Timestamp modified_at = 6;
+  uint32 type = 7;
+//  repeated bytes attached_files = 7;
+}
+
+message Edit {
+  string id = 1;
+  string chat_id = 2;
+  string value = 3;
+}
+
+message Delete {
+  string id = 1;
+  string chat_id = 2;
+}
