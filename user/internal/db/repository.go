@@ -10,7 +10,7 @@ type Repository interface {
 	RefuseFriendship(ctx context.Context, receiver string, sender string) error
 	AcceptFriendship(ctx context.Context, receiver string, sender string) error
 	GetAllFriends(ctx context.Context, userID string) (models.UserIDs, error)
-	GetFriend(ctx context.Context, userID, friendID string) (models.UserIDs, error)
+	GetFriend(ctx context.Context, userID, friendID string) (models.User, error)
 	GetFriendshipSuggestions(ctx context.Context, userID string) (models.UserIDs, error)
 
 	Signup(ctx context.Context, req models.SignupReq) error
@@ -19,5 +19,5 @@ type Repository interface {
 
 	SwitchNotificationsStatus(ctx context.Context, userID string) error
 	SwitchPrivatePolicy(ctx context.Context, userID string) error
-	GetUserInfo(ctx context.Context, uuid string) (models.MainInfo, error)
+	GetUserInfo(ctx context.Context, userID string) (models.MainInfo, error)
 }

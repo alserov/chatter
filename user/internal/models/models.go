@@ -45,3 +45,6 @@ type FriendShipReq struct {
 }
 
 type UserIDs []string
+type Friends struct {
+	FriendIDs []string `bson:"friendIDs"`
+}
