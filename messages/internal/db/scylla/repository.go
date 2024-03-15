@@ -2,12 +2,12 @@ package scylla
 
 import (
 	"context"
-	"github.com/alserov/chatter/messages/internal/repository"
+	"github.com/alserov/chatter/messages/internal/db"
 	"github.com/alserov/chatter/messages/internal/usecase/models"
 	"github.com/gocql/gocql"
 )
 
-var _ repository.Repository = &Scylla{}
+var _ db.Repository = &Scylla{}
 
 func NewRepository(s *gocql.Session) *Scylla {
 	return &Scylla{

@@ -4,10 +4,13 @@ import (
 	"context"
 	"fmt"
 	"github.com/alserov/chatter/messages/internal/config"
+	"github.com/alserov/chatter/messages/internal/db"
+	"github.com/alserov/chatter/messages/internal/db/scylla"
 	"github.com/alserov/chatter/messages/internal/log"
-	"github.com/alserov/chatter/messages/internal/repository/scylla"
 	"github.com/alserov/chatter/messages/internal/server"
+	"github.com/alserov/chatter/messages/internal/server/grpc"
 	"github.com/alserov/chatter/messages/internal/usecase"
+	"github.com/gocql/gocql"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"net"
@@ -18,18 +21,35 @@ func MustStart() {
 		fx.Provide(
 			config.MustLoad,
 			log.MustSetup,
-			usecase.NewChat,
 		),
 
-		fx.Invoke(func(cfg *config.Config) {
-			fx.Provide(scylla.NewRepository(scylla.MustConnect(cfg.DB.Addr)))
+		fx.Invoke(func(cfg *config.Config, log log.Logger) {
+			log.Debug("app config", zap.Any("cfg", cfg))
 		}),
 
-		fx.Invoke(func(ucase usecase.Chat) {
-			fx.Provide(server.NewServer(ucase))
+		// db conn
+		fx.Provide(func(cfg *config.Config) *gocql.Session {
+			return scylla.MustConnect(cfg.DB.Addr)
 		}),
 
-		fx.Invoke(func(lc fx.Lifecycle, cfg *config.Config, log log.Logger, srvr server.Server) {
+		// db repo init
+		fx.Provide(func(conn *gocql.Session) db.Repository {
+			return scylla.NewRepository(conn)
+		}),
+
+		// usecase init
+		fx.Provide(func(repo db.Repository) *usecase.Chat {
+			return usecase.NewChat(usecase.Param{
+				Repo: repo,
+			})
+		}),
+
+		// server init
+		fx.Provide(func(ucase *usecase.Chat) server.Server {
+			return grpc.NewServer(ucase)
+		}),
+
+		fx.Invoke(func(lc fx.Lifecycle, cfg *config.Config, log log.Logger, srvr server.Server, dbConn *gocql.Session) {
 			lc.Append(fx.Hook{
 				OnStart: func(ctx context.Context) error {
 					log.Info("starting server")
@@ -49,6 +69,7 @@ func MustStart() {
 					return nil
 				},
 				OnStop: func(ctx context.Context) error {
+					dbConn.Close()
 					srvr.Stop()
 					log.Info("server was stopped")
 					return nil

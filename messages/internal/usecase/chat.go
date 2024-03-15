@@ -3,16 +3,22 @@ package usecase
 import (
 	"context"
 	"fmt"
-	"github.com/alserov/chatter/messages/internal/repository"
+	"github.com/alserov/chatter/messages/internal/db"
 	"github.com/alserov/chatter/messages/internal/usecase/models"
 )
 
-func NewChat() *Chat {
-	return &Chat{}
+type Param struct {
+	Repo db.Repository
+}
+
+func NewChat(p Param) *Chat {
+	return &Chat{
+		repo: p.Repo,
+	}
 }
 
 type Chat struct {
-	repo repository.Repository
+	repo db.Repository
 }
 
 func (c Chat) CreateMessage(ctx context.Context, msg models.Message) error {
