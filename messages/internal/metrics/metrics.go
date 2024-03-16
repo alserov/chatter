@@ -2,6 +2,8 @@ package metrics
 
 import (
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"net/http"
 	"strconv"
 	"time"
 )
@@ -11,11 +13,16 @@ type Metrics interface {
 }
 
 func NewMetrics() Metrics {
-	return &metrics{}
+	http.NewServeMux().Handle("/metrics", promhttp.Handler())
+	return &metrics{
+		requestsObserve: prometheus.NewHistogramVec(prometheus.HistogramOpts{
+			Name: "requests",
+		}, []string{"name", "status"}),
+	}
 }
 
 type metrics struct {
-	requestsObserve prometheus.HistogramVec
+	requestsObserve *prometheus.HistogramVec
 }
 
 func (m metrics) ObserveRequest(name string, time time.Duration, status int) {
