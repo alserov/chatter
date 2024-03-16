@@ -9,6 +9,7 @@ import (
 func MustConnect(ks string, hosts ...string) gocqlx.Session {
 	cluster := gocql.NewCluster(hosts...)
 	cluster.ProtoVersion = 4
+	cluster.Keyspace = ks
 
 	s, err := gocqlx.WrapSession(cluster.CreateSession())
 	if err != nil {

@@ -4,7 +4,7 @@ import "time"
 
 type Message struct {
 	ID         string
-	Value      string
+	Value      []byte
 	UserID     string
 	ChatID     string
 	SentAt     time.Time
@@ -21,9 +21,4 @@ type EditMessage struct {
 	ID         string
 	Value      string
 	ModifiedAt time.Time
-}
-
-type DeleteMessage struct {
-	ID   string
-	Type uint
 }

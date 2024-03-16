@@ -12,6 +12,7 @@ const (
         ID text,
         UserID text,
         ChatID text,
+        Value blob,
         SentAt timestamp,
         UpdatedAt timestamp,
         Type tinyint,
