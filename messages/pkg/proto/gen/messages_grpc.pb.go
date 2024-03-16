@@ -26,6 +26,7 @@ type MessagesClient interface {
 	CreateMessage(ctx context.Context, in *Message, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteMessage(ctx context.Context, in *Delete, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	EditMessage(ctx context.Context, in *Edit, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetMessages(ctx context.Context, in *GetMessagesReq, opts ...grpc.CallOption) (*MessagesRes, error)
 }
 
 type messagesClient struct {
@@ -63,6 +64,15 @@ func (c *messagesClient) EditMessage(ctx context.Context, in *Edit, opts ...grpc
 	return out, nil
 }
 
+func (c *messagesClient) GetMessages(ctx context.Context, in *GetMessagesReq, opts ...grpc.CallOption) (*MessagesRes, error) {
+	out := new(MessagesRes)
+	err := c.cc.Invoke(ctx, "/Messages/GetMessages", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MessagesServer is the server API for Messages service.
 // All implementations must embed UnimplementedMessagesServer
 // for forward compatibility
@@ -70,6 +80,7 @@ type MessagesServer interface {
 	CreateMessage(context.Context, *Message) (*emptypb.Empty, error)
 	DeleteMessage(context.Context, *Delete) (*emptypb.Empty, error)
 	EditMessage(context.Context, *Edit) (*emptypb.Empty, error)
+	GetMessages(context.Context, *GetMessagesReq) (*MessagesRes, error)
 	mustEmbedUnimplementedMessagesServer()
 }
 
@@ -85,6 +96,9 @@ func (UnimplementedMessagesServer) DeleteMessage(context.Context, *Delete) (*emp
 }
 func (UnimplementedMessagesServer) EditMessage(context.Context, *Edit) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EditMessage not implemented")
+}
+func (UnimplementedMessagesServer) GetMessages(context.Context, *GetMessagesReq) (*MessagesRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMessages not implemented")
 }
 func (UnimplementedMessagesServer) mustEmbedUnimplementedMessagesServer() {}
 
@@ -153,6 +167,24 @@ func _Messages_EditMessage_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Messages_GetMessages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMessagesReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MessagesServer).GetMessages(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/Messages/GetMessages",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MessagesServer).GetMessages(ctx, req.(*GetMessagesReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Messages_ServiceDesc is the grpc.ServiceDesc for Messages service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -171,6 +203,10 @@ var Messages_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "EditMessage",
 			Handler:    _Messages_EditMessage_Handler,
+		},
+		{
+			MethodName: "GetMessages",
+			Handler:    _Messages_GetMessages_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

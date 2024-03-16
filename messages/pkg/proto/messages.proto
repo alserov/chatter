@@ -9,6 +9,7 @@ service Messages {
   rpc CreateMessage(Message) returns(google.protobuf.Empty);
   rpc DeleteMessage(Delete) returns (google.protobuf.Empty);
   rpc EditMessage(Edit) returns (google.protobuf.Empty);
+  rpc GetMessages(GetMessagesReq) returns (MessagesRes);
 }
 
 message Message {
@@ -20,6 +21,16 @@ message Message {
   google.protobuf.Timestamp modified_at = 6;
   uint32 type = 7;
 //  repeated bytes attached_files = 7;
+}
+
+message MessagesRes {
+  repeated Message Messages = 1;
+}
+
+message GetMessagesReq {
+  string chat_id = 1;
+  google.protobuf.Timestamp from = 2;
+  google.protobuf.Timestamp to = 3;
 }
 
 message Edit {
