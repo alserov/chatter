@@ -13,7 +13,7 @@ const (
         UserID text,
         ChatID text,
         Value blob,
-        SentAt timestamp,
+        CreatedAt timestamp,
         UpdatedAt timestamp,
         Type tinyint,
         PRIMARY KEY (ID))`

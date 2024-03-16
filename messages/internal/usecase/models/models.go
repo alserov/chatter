@@ -7,7 +7,7 @@ type Message struct {
 	Value      []byte
 	UserID     string
 	ChatID     string
-	SentAt     time.Time
+	CreatedAt  time.Time
 	ModifiedAt time.Time
 	Type       uint
 }
@@ -19,6 +19,6 @@ const (
 
 type EditMessage struct {
 	ID         string
-	Value      string
+	Value      []byte
 	ModifiedAt time.Time
 }

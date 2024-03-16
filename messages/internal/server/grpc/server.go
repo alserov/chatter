@@ -60,7 +60,7 @@ func (s grpcServer) DeleteMessage(ctx context.Context, delete *messages.Delete) 
 		return nil, err
 	}
 
-	err := s.uc.DeleteMessage(ctx, s.convert.ToDeleteMessage(delete))
+	err := s.uc.DeleteMessage(ctx, delete.Id)
 	if err != nil {
 		return &emptypb.Empty{}, err
 	}

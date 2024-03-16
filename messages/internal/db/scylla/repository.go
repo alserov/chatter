@@ -22,7 +22,7 @@ type Scylla struct {
 func (s Scylla) EditMessage(ctx context.Context, edit models.EditMessage) error {
 	query := `UPDATE text SET value = ?,  modified_at = ? WHERE id = ?`
 
-	err := s.session.Query(query, []string{edit.Value, edit.ModifiedAt.String(), edit.ID}).Exec()
+	err := s.session.Query(query, []string{string(edit.Value), edit.ModifiedAt.String(), edit.ID}).Exec()
 	if err != nil {
 		// TODO: custom error
 		return err
@@ -44,8 +44,8 @@ func (s Scylla) DeleteMessage(ctx context.Context, deleteID string) error {
 }
 
 func (s Scylla) CreateMessage(ctx context.Context, msg models.Message) error {
-	query := `INSERT INTO text (id, chat_id, user_id, value, sent_at, modified_at) VALUES (?, ?, ?, ?, ?, ?)`
-	err := s.session.Query(query, []string{msg.ID, msg.ChatID, msg.UserID, string(msg.Value), msg.SentAt.String(), msg.ModifiedAt.String()}).Exec()
+	query := `INSERT INTO text (id, chat_id, user_id, value, created_at, modified_at) VALUES (?, ?, ?, ?, ?, ?)`
+	err := s.session.Query(query, []string{msg.ID, msg.ChatID, msg.UserID, string(msg.Value), msg.CreatedAt.String(), msg.ModifiedAt.String()}).Exec()
 	if err != nil {
 		// TODO: custom error
 		return err

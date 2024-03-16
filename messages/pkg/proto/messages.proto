@@ -24,7 +24,6 @@ message Message {
 
 message Edit {
   string id = 1;
-  string chat_id = 2;
   string value = 3;
 }
 

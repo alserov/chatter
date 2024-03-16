@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/alserov/chatter/messages/internal/db"
 	"github.com/alserov/chatter/messages/internal/usecase/models"
+	"time"
 )
 
 type Param struct {
@@ -22,6 +23,9 @@ type Chat struct {
 }
 
 func (c Chat) CreateMessage(ctx context.Context, msg models.Message) error {
+	msg.CreatedAt = time.Now()
+	msg.ModifiedAt = msg.CreatedAt
+
 	err := c.repo.CreateMessage(ctx, msg)
 	if err != nil {
 		return fmt.Errorf("repo error: %w", err)
@@ -31,6 +35,8 @@ func (c Chat) CreateMessage(ctx context.Context, msg models.Message) error {
 }
 
 func (c Chat) EditMessage(ctx context.Context, updated models.EditMessage) error {
+	updated.ModifiedAt = time.Now()
+
 	err := c.repo.EditMessage(ctx, updated)
 	if err != nil {
 		return fmt.Errorf("repo error: %w", err)
@@ -39,8 +45,8 @@ func (c Chat) EditMessage(ctx context.Context, updated models.EditMessage) error
 	return nil
 }
 
-func (c Chat) DeleteMessage(ctx context.Context, delete models.DeleteMessage) error {
-	err := c.repo.DeleteMessage(ctx, delete)
+func (c Chat) DeleteMessage(ctx context.Context, deleteID string) error {
+	err := c.repo.DeleteMessage(ctx, deleteID)
 	if err != nil {
 		return fmt.Errorf("repo error: %w", err)
 	}
