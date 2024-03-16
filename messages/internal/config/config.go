@@ -17,7 +17,8 @@ type DB struct {
 }
 
 type Scylla struct {
-	Addr string `yaml:"addr"`
+	Keyspace string `yaml:"keyspace"`
+	Addr     string `yaml:"addr"`
 }
 
 func MustLoad() *Config {
