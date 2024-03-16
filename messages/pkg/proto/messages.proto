@@ -14,7 +14,7 @@ service Messages {
 message Message {
   string id = 1;
   string chat_id = 2;
-  string sender_id = 3;
+  string user_id = 3;
   bytes value = 4;
   google.protobuf.Timestamp sent_at = 5;
   google.protobuf.Timestamp modified_at = 6;
@@ -30,5 +30,4 @@ message Edit {
 
 message Delete {
   string id = 1;
-  string chat_id = 2;
 }
