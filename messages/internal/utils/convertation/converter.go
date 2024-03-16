@@ -30,7 +30,7 @@ func (c Converter) ToEditMessage(in *messages.Edit) models.EditMessage {
 	}
 }
 
-func (c Converter) ToGetMessages(in *messages.GetMessagesReq) models.GetParams {
+func (c Converter) ToGetMessages(in *messages.GetParams) models.GetParams {
 	return models.GetParams{
 		ChatID: in.ChatId,
 		From:   in.From.AsTime(),
