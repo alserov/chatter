@@ -9,7 +9,7 @@ type Message struct {
 	ChatID     string
 	CreatedAt  time.Time
 	ModifiedAt time.Time
-	Type       uint
+	Type       uint32
 }
 
 const (
@@ -21,4 +21,10 @@ type EditMessage struct {
 	ID         string
 	Value      []byte
 	ModifiedAt time.Time
+}
+
+type GetParams struct {
+	ChatID string
+	From   time.Time
+	To     time.Time
 }

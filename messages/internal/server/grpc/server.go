@@ -80,3 +80,16 @@ func (s grpcServer) EditMessage(ctx context.Context, edit *messages.Edit) (*empt
 
 	return &emptypb.Empty{}, nil
 }
+
+func (s grpcServer) GetMessages(ctx context.Context, req *messages.GetParams) (*messages.MessagesRes, error) {
+	if err := s.validate.ValidateGetMessages(req); err != nil {
+		return nil, err
+	}
+
+	msgs, err := s.uc.GetMessages(ctx, s.convert.ToGetMessages(req))
+	if err != nil {
+		return nil, err
+	}
+
+	return s.convert.FromMessages(msgs), nil
+}

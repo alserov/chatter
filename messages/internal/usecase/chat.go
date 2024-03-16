@@ -53,3 +53,12 @@ func (c Chat) DeleteMessage(ctx context.Context, deleteID string) error {
 
 	return nil
 }
+
+func (c Chat) GetMessages(ctx context.Context, req models.GetParams) ([]models.Message, error) {
+	msgs, err := c.repo.GetMessages(ctx, req)
+	if err != nil {
+		return msgs, fmt.Errorf("repo error: %w", err)
+	}
+
+	return msgs, nil
+}

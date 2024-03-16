@@ -21,3 +21,7 @@ func (v Validator) ValidateEditMessage(in *messages.Edit) error {
 
 	return nil
 }
+
+func (v Validator) ValidateGetMessages(in *messages.GetMessagesReq) error {
+	return nil
+}
